@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { createWriteStream } from 'fs';
+import { Model, UpdateQuery } from 'mongoose';
+import { join, normalize } from 'path';
 import { Video, VideoDocument } from './video.schema';
 import { CreateVideoDto } from './dto/create-video.input';
 import { FileUpload } from 'graphql-upload';
-import path from 'path';
-import * as fs from 'fs';
 import { updateVideoDto } from './dto/update-video.input';
 
 @Injectable()
@@ -15,59 +15,46 @@ export class VideoService {
   ) {}
 
   async createVideo(createVideoDto: CreateVideoDto): Promise<Video> {
-    console.log('1');
-    const createdVideo = new this.videoModel(createVideoDto);
-    return createdVideo.save();
+    const { title, description, tags, video } = createVideoDto;
+    //console.log(image);
+    const { filename, mimetype, encoding, createReadStream } = await video;
+    //console.log(filename, mimetype, encoding, createReadStream);
+    const ReadStream = createReadStream();
+    console.log(__dirname);
+    const newFilename = `${Date.now()}-${filename}`;
+    let savePath = join(__dirname, '..', '..', 'upload', newFilename);
+    console.log(savePath);
+    const writeStream = await createWriteStream(savePath);
+    await ReadStream.pipe(writeStream);
+    const baseUrl = process.env.BASE_URL;
+    const port = process.env.PORT;
+    savePath = `${baseUrl}${port}\\${newFilename}`;
+    return await this.videoModel.create({
+      title,
+      description,
+      tags,
+      video: savePath,
+    });
   }
 
   async findAllVideos(): Promise<Video[]> {
-    return this.videoModel.find().exec();
+    return await this.videoModel.find({});
   }
 
-  async findVideoById(id: string): Promise<Video | null> {
-    return this.videoModel.findById(id).exec();
+  async findVideo(data: string): Promise<Video[]> {
+    return await this.videoModel
+      .find({ $text: { $search: data } }, { score: { $meta: 'textScore' } })
+      .sort({ score: { $meta: 'textScore' } });
   }
 
-  async updateVideo(updateVideoDto: updateVideoDto): Promise<Video | null> {
-    const { id, title, description, tags } = updateVideoDto;
-    return this.videoModel
-      .findByIdAndUpdate(id, { title, description, tags }, { new: true })
-      .exec();
+  async updateVideo(
+    _id: string,
+    data: UpdateQuery<VideoDocument> | updateVideoDto,
+  ): Promise<Video> {
+    return await this.videoModel.findByIdAndUpdate(_id, data, { new: true });
   }
 
-  async deleteVideo(id: string): Promise<boolean> {
-    const result = await this.videoModel.deleteOne({ _id: id }).exec();
-    return result.deletedCount > 0;
-  }
-
-  public async handleFileUploadPublic(
-    file: FileUpload,
-    filename: string,
-  ): Promise<string> {
-    return this.handleFileUpload(file, filename);
-  }
-
-  private async handleFileUpload(
-    file: FileUpload,
-    filename: string,
-  ): Promise<string> {
-    const uploadDir = path.join(process.cwd(), 'src/uploads');
-
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    const filePath = path.join(uploadDir, filename);
-    const writeStream = fs.createWriteStream(filePath);
-
-    await new Promise((resolve, reject) => {
-      file
-        .createReadStream()
-        .pipe(writeStream)
-        .on('finish', resolve)
-        .on('error', reject);
-    });
-
-    return `http://localhost:3001/graphql/uploads/${filename}`;
+  async deleteVideo(_id: string): Promise<Video> {
+    return await this.videoModel.findByIdAndDelete(_id);
   }
 }

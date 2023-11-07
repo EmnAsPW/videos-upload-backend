@@ -15,7 +15,6 @@ export class UserService {
     //console.log(image);
     const { filename, mimetype, encoding, createReadStream } = await image;
     //console.log(filename, mimetype, encoding, createReadStream);
-
     const ReadStream = createReadStream();
     console.log(__dirname);
     const newFilename = `${Date.now()}-${filename}`;
@@ -26,7 +25,12 @@ export class UserService {
     const baseUrl = process.env.BASE_URL;
     const port = process.env.PORT;
     savePath = `${baseUrl}${port}\\${newFilename}`;
-    return await this.userModel.create({ name, age, title, image: savePath });
+    return await this.userModel.create({
+      name,
+      age,
+      title,
+      image: savePath,
+    });
   }
 
   async findAllUser(): Promise<User[]> {

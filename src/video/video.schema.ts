@@ -2,18 +2,20 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
+export type VideoDocument = Video & Document;
+
 @ObjectType()
 @Schema()
 export class Video {
-  @Field(() => ID, { nullable: true })
-  _id: mongoose.Schema.Types.ObjectId;
+  @Field(() => String, { nullable: true })
+  _id?: string;
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
   title: string;
 
   @Field(() => String, { nullable: true })
-  @Prop()
+  @Prop({ type: String })
   description: string;
 
   @Field(() => [String], { nullable: true })
@@ -21,12 +23,7 @@ export class Video {
   tags: string[];
 
   @Field(() => String, { nullable: true })
-  @Prop()
-  filename: string;
-
-  // @Field(() => String, { nullable: true })
-  // @Prop()
-  // videoUrl: string;
+  @Prop({ type: String })
+  video: string;
 }
-export type VideoDocument = Video & Document;
 export const VideoSchema = SchemaFactory.createForClass(Video);
