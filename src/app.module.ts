@@ -21,7 +21,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URL),
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      csrfPrevention: false,
+      csrfPrevention: true,
       driver: ApolloDriver,
       playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -29,7 +29,6 @@ import { UserModule } from './user/user.module';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     VideoModule,
-    //ProfileImageModule,
     UserModule,
   ],
   controllers: [],

@@ -39,6 +39,10 @@ export class VideoResolver {
     const { filename, mimetype, encoding, createReadStream } = await video;
     //console.log(filename, mimetype, encoding, createReadStream);
 
+    if (mimetype !== 'video/mp4') {
+      throw new Error('Only MP4 video files are allowed.');
+    }
+
     const ReadStream = createReadStream();
     console.log(__dirname);
     const newFilename = `${Date.now()}-${filename}`;
@@ -67,6 +71,10 @@ export class VideoResolver {
     @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
   ) {
     const { filename, mimetype, encoding, createReadStream } = file;
+
+    // if (mimetype !== 'mp4') {
+    //   throw new Error('Only MP4 video files are allowed.');
+    // }
 
     const readStream = createReadStream();
     console.log(__dirname);

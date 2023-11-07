@@ -19,6 +19,12 @@ export class VideoService {
     //console.log(image);
     const { filename, mimetype, encoding, createReadStream } = await video;
     //console.log(filename, mimetype, encoding, createReadStream);
+
+    //console.log('*************', mimetype);
+    if (mimetype !== 'video/mp4') {
+      throw new Error('Only MP4 video files are allowed.');
+    }
+
     const ReadStream = createReadStream();
     console.log(__dirname);
     const newFilename = `${Date.now()}-${filename}`;
