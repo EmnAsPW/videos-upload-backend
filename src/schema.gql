@@ -10,19 +10,29 @@ type Video {
   video: String
 }
 
-type User {
+type Profile {
   _id: String
   name: String
   age: Float
-  title: String
+  Bio: String
   image: String
+}
+
+type UserDetails {
+  id: String!
+  name: String!
+  email: String!
+}
+
+type token {
+  token: String!
 }
 
 type Query {
   videos: [Video!]!
   getvideobytitle(data: String!): [Video!]!
-  users: [User!]!
-  usersbyname(data: String!): [User!]!
+  profiles: [Profile!]!
+  profilebyname(data: String!): [Profile!]!
 }
 
 type Mutation {
@@ -30,9 +40,12 @@ type Mutation {
   updateVideo(_id: String!, updateVideoDto: updateVideoDto!): Video!
   deleteVideo(_id: String!): Video!
   uplodaFile(file: Upload!): Boolean!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(_id: String!, updateUserInput: UpdateUserInput!): User!
-  deleteUser(_id: String!): User!
+  createProfile(createProfile: CreateProfileInput!): Profile!
+  updateProfile(_id: String!, updateprofileInput: UpdateProfileInput!): Profile!
+  deleteProfile(_id: String!): Profile!
+  signup(newUserInput: NewUserInput!): UserDetails!
+  login(existingUserInput: ExistingUserInput!): token!
+  verifyJwt(jwt: String!): UserDetails!
 }
 
 input CreateVideoDto {
@@ -52,16 +65,28 @@ input updateVideoDto {
   video: Upload
 }
 
-input CreateUserInput {
+input CreateProfileInput {
   name: String!
   age: Float!
-  title: String!
+  Bio: String!
   image: Upload
 }
 
-input UpdateUserInput {
+input UpdateProfileInput {
   name: String
   age: Float
-  title: String
+  Bio: String
   image: Upload
+}
+
+input NewUserInput {
+  Username: String!
+  email: String!
+  password: String!
+  confirmPassword: String!
+}
+
+input ExistingUserInput {
+  email: String!
+  password: String!
 }

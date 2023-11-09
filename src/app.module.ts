@@ -9,12 +9,14 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { join } from 'path';
 import { UserModule } from './user/user.module';
+import { ProfileModule } from './profile/profile.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'upload'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'upload'),
+    // }),
     // MongooseModule.forRoot(
     //   'mongodb+srv://emonsourov:haCSbuZrobyBXent@videodb.m3rgdgm.mongodb.net/?retryWrites=true&w=majority',
     // ),
@@ -30,6 +32,8 @@ import { UserModule } from './user/user.module';
     }),
     VideoModule,
     UserModule,
+    ProfileModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

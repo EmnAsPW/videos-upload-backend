@@ -5,7 +5,7 @@ import { Model, UpdateQuery } from 'mongoose';
 import { join, normalize } from 'path';
 import { Video, VideoDocument } from './video.schema';
 import { CreateVideoDto } from './dto/create-video.input';
-import { FileUpload } from 'graphql-upload';
+//import { FileUpload } from 'graphql-upload';
 import { updateVideoDto } from './dto/update-video.input';
 
 @Injectable()
@@ -17,11 +17,11 @@ export class VideoService {
   async createVideo(createVideoDto: CreateVideoDto): Promise<Video> {
     const { title, description, tags, video } = createVideoDto;
     //console.log(image);
-    const { filename, mimetype, encoding, createReadStream } = await video;
-    //console.log(filename, mimetype, encoding, createReadStream);
+    const resp = await video;
+    const { filename, mimetype, encoding, createReadStream } = resp;
+    console.log(filename, mimetype, encoding, createReadStream);
 
-    //console.log('*************', mimetype);
-    if (mimetype !== 'video/mp4') {
+    if (mimetype !== 'video/mp4' && mimetype !== 'application/octet-stream') {
       throw new Error('Only MP4 video files are allowed.');
     }
 
