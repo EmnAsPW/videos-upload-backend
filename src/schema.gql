@@ -12,8 +12,10 @@ type Video {
 
 type Profile {
   _id: String
-  name: String
-  age: Float
+  First_Name: String
+  Last_Name: String
+  Address: String
+  Age: Float
   Bio: String
   image: String
 }
@@ -75,15 +77,19 @@ input updateVideoDto {
 }
 
 input CreateProfileInput {
-  name: String!
-  age: Float!
-  Bio: String!
+  First_Name: String
+  Last_Name: String
+  Address: String
+  Age: Float
+  Bio: String
   image: Upload
 }
 
 input UpdateProfileInput {
-  name: String
-  age: Float
+  First_Name: String
+  Last_Name: String
+  Address: String
+  Age: Float
   Bio: String
   image: Upload
 }

@@ -135,7 +135,7 @@ export class AuthService {
       this.logger.error(`Error during signout: ${error.message}`);
       throw new HttpException(
         'Signout failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR, //git commit is : Everything is done
       );
     }
   }

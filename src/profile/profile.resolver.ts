@@ -33,10 +33,19 @@ export class ProfileResolver {
     @Args('_id') _id: string,
     @Args('updateprofileInput') updateprofileInput: UpdateProfileInput,
   ): Promise<Profile> {
-    const { name, age, Bio, image } = updateprofileInput;
+    const { First_Name, Last_Name, Address, Age, Bio, image } =
+      updateprofileInput;
     //console.log(image);
     const { filename, mimetype, encoding, createReadStream } = await image;
     //console.log(filename, mimetype, encoding, createReadStream);
+    if (
+      mimetype !== 'image/jpg' &&
+      mimetype !== 'image/PNG' &&
+      mimetype !== 'image/JPEG' &&
+      mimetype !== 'application/octet-stream'
+    ) {
+      throw new Error('Only jpg & PNG video files are allowed.');
+    }
 
     const ReadStream = createReadStream();
     console.log(__dirname);
@@ -49,32 +58,44 @@ export class ProfileResolver {
     const port = process.env.PORT;
     savePath = `${baseUrl}${port}\\${newFilename}`;
     return await this.profileService.updateProfile(_id, {
-      name,
-      age,
+      First_Name,
+      Last_Name,
+      Address,
+      Age,
       Bio,
       image: savePath,
     });
   }
 
   @Mutation(() => Profile, { name: 'deleteProfile' })
-  async deleteUser(@Args('_id') _id: string): Promise<Profile> {
+  async deleteProfile(@Args('_id') _id: string): Promise<Profile> {
     return await this.profileService.deleteProfile(_id);
   }
-  @Mutation(() => Boolean, { name: 'uplodaFile' })
-  async upload(
-    @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
-  ) {
-    const { filename, mimetype, encoding, createReadStream } = file;
 
-    const readStream = createReadStream();
-    console.log(__dirname);
-    const savePath = normalize(
-      `${__dirname}/../../upload/${Date.now()}-${filename}`,
-    );
-    const writeStream = createWriteStream(savePath);
+  // @Mutation(() => Profile, { name: 'deleteProfile' })
+  // async deleteProfile(
+  //   @Args('_id') _id: string,
+  //   @Args('deleteProfileInput') deleteProfileInput: DeleteProfileInput,
+  // ): Promise<Profile> {
+  //   const { image } = deleteProfileInput;
+  //   return await this.profileService.deleteProfile(_id, { image });
+  // }
 
-    readStream.pipe(writeStream);
+  // @Mutation(() => Boolean, { name: 'uplodaFile' })
+  // async upload(
+  //   @Args({ name: 'file', type: () => GraphQLUpload }) file: FileUpload,
+  // ) {
+  //   const { filename, mimetype, encoding, createReadStream } = file;
 
-    return true;
-  }
+  //   const readStream = createReadStream();
+  //   console.log(__dirname);
+  //   const savePath = normalize(
+  //     `${__dirname}/../../upload/${Date.now()}-${filename}`,
+  //   );
+  //   const writeStream = createWriteStream(savePath);
+
+  //   readStream.pipe(writeStream);
+
+  //   return true;
+  // }
 }

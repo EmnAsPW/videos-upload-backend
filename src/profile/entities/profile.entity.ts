@@ -12,11 +12,19 @@ export class Profile {
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
-  name?: string;
+  First_Name?: string;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  Last_Name?: string;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  Address?: string;
 
   @Field(() => Number, { nullable: true })
   @Prop({ type: Number })
-  age?: number;
+  Age?: number;
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })

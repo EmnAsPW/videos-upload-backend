@@ -3,13 +3,19 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class CreateProfileInput {
-  @Field(() => String)
-  name: string;
+  @Field(() => String, { nullable: true })
+  First_Name: string;
 
-  @Field(() => Number)
-  age: number;
+  @Field(() => String, { nullable: true })
+  Last_Name: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
+  Address: string;
+
+  @Field(() => Number, { nullable: true })
+  Age: number;
+
+  @Field(() => String, { nullable: true })
   Bio: string;
 
   @Field(() => GraphQLUpload, { nullable: true })

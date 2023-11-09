@@ -15,12 +15,24 @@ export class ProfileService {
   async createProfile(
     createProfileInput: CreateProfileInput,
   ): Promise<Profile> {
-    const { name, age, Bio, image } = createProfileInput;
+    const { First_Name, Last_Name, Address, Age, Bio, image } =
+      createProfileInput;
     //console.log(image);
     const { filename, mimetype, encoding, createReadStream } = await image;
     //console.log(filename, mimetype, encoding, createReadStream);
+
+    // console.log('....................', mimetype);
+
+    if (
+      mimetype !== 'image/jpg' &&
+      mimetype !== 'image/PNG' &&
+      mimetype !== 'image/JPEG' &&
+      mimetype !== 'application/octet-stream'
+    ) {
+      throw new Error('Only jpg & PNG video files are allowed.');
+    }
     const ReadStream = createReadStream();
-    console.log(__dirname);
+    //console.log(__dirname);
     const newFilename = `${Date.now()}-${filename}`;
     let savePath = join(__dirname, '..', '..', 'upload', newFilename);
     console.log(savePath);
@@ -30,8 +42,10 @@ export class ProfileService {
     const port = process.env.PORT;
     savePath = `${baseUrl}${port}\\${newFilename}`;
     return await this.userModel.create({
-      name,
-      age,
+      First_Name,
+      Last_Name,
+      Address,
+      Age,
       Bio,
       image: savePath,
     });
@@ -57,3 +71,7 @@ export class ProfileService {
     return await this.userModel.findByIdAndDelete(_id);
   }
 }
+
+//  async deleteProfile(_id: string, image: string): Promise<Profile> {
+//     return await this.userModel.findByIdAndDelete(_id, image);
+//   }
