@@ -11,9 +11,21 @@ export class UserDetails {
   @Field(() => String, { nullable: true })
   email: string;
 
-  @Field()
-  password: string;
+  // @Field()
+  // password: string;
 
+  // @Field()
+  // confirmPassword: string;
+}
+
+@ObjectType()
+export class ExpireIn {
   @Field()
-  confirmPassword: string;
+  exp: number;
+}
+
+@ObjectType()
+export class BooleanType {
+  @Field()
+  value: boolean;
 }

@@ -22,8 +22,14 @@ type UserDetails {
   _id: String!
   username: String
   email: String
-  password: String!
-  confirmPassword: String!
+}
+
+type ExpireIn {
+  exp: Float!
+}
+
+type BooleanType {
+  value: Boolean!
 }
 
 type token {
@@ -47,7 +53,8 @@ type Mutation {
   deleteProfile(_id: String!): Profile!
   signup(newUserInput: NewUserInput!): UserDetails!
   login(existingUserInput: ExistingUserInput!): token!
-  verifyJwt(jwt: String!): UserDetails!
+  verifyJwt(jwt: String!): ExpireIn!
+  signout(jwt: String!): BooleanType!
 }
 
 input CreateVideoDto {

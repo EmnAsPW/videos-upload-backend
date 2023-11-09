@@ -15,8 +15,8 @@ export class UserService {
       _id: user.id,
       username: user.username,
       email: user.email,
-      password: user.password,
-      confirmPassword: user.confirmPassword,
+      // password: user.password,
+      // confirmPassword: user.confirmPassword,
     };
   }
 

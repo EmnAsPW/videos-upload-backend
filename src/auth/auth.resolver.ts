@@ -1,6 +1,10 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { UserDetails } from 'src/user/user-details.interface';
+import {
+  BooleanType,
+  ExpireIn,
+  UserDetails,
+} from 'src/user/user-details.interface';
 // import {
 //   TokenResponse,
 //   JwtVerification} from './auth.types';
@@ -34,12 +38,26 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => UserDetails, { name: 'verifyJwt' })
+  @Mutation(() => ExpireIn, { name: 'verifyJwt' })
   async verifyJwt(@Args('jwt') jwt: string): Promise<{ exp: number }> {
     try {
       return this.authService.verifyJwt(jwt);
     } catch (error) {
       throw new Error('JWT verification failed: ' + error.message);
+    }
+  }
+
+  @Mutation(() => BooleanType, { name: 'signout' })
+  async signout(@Args('jwt') jwt: string): Promise<BooleanType> {
+    try {
+      const success = await this.authService.signout(jwt);
+      if (success) {
+        return { value: true };
+      } else {
+        return { value: false };
+      }
+    } catch (error) {
+      throw new Error('Signout failed: ' + error.message);
     }
   }
 }

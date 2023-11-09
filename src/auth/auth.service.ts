@@ -95,7 +95,10 @@ export class AuthService {
     const user = await this.validateUser(email, password);
 
     if (!user) {
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Check Again Email & Password!!',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     try {
@@ -117,6 +120,23 @@ export class AuthService {
     } catch (error) {
       this.logger.error(`Invalid JWT: ${error.message}`);
       throw new HttpException('Invalid JWT', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  async signout(jwt: string): Promise<boolean> {
+    try {
+      this.jwtService.verify(jwt);
+      //const payload = this.jwtService.verify(jwt);
+
+      //const invalidToken = this.jwtService.sign({ exp: 0 });
+
+      return true;
+    } catch (error) {
+      this.logger.error(`Error during signout: ${error.message}`);
+      throw new HttpException(
+        'Signout failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
