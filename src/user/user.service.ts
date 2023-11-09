@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDetails } from './user-details.interface';
-import { UserDocument, User } from './user.schema';
+import { User, UserDocument } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -12,9 +12,11 @@ export class UserService {
 
   _getUserDetails(user: UserDocument): UserDetails {
     return {
-      id: user._id,
-      name: user.name,
+      _id: user.id,
+      username: user.username,
       email: user.email,
+      password: user.password,
+      confirmPassword: user.confirmPassword,
     };
   }
 
@@ -29,17 +31,31 @@ export class UserService {
   }
 
   async create(
-    name: string,
+    username: string,
     email: string,
     password: string,
     confirmPassword: string,
   ): Promise<UserDocument> {
-    const newUser = new this.userModel({
-      name,
+    const newUser = await this.userModel.create({
+      username,
       email,
       password,
       confirmPassword,
     });
+    //const res = await newUser.save();
+    //console.log(newUser);
     return newUser.save();
   }
 }
+
+//  ): Promise<User> {
+//     const newUser = await this.userModel.create({
+//       username,
+//       email,
+//       password,
+//       confirmPassword,
+//     });
+//     //const res = await newUser.save();
+//     //console.log(newUser);
+//     return newUser;
+//   }

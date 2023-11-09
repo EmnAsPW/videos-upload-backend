@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { NewUserInput } from 'src/user/dto/New-user.input';
 import { ExistingUserInput } from 'src/user/dto/Existing-user.input';
 import { UserService } from 'src/user/user.service';
+import { token } from 'src/user/user-token.interface';
 
 @Injectable()
 export class AuthService {
@@ -19,8 +20,10 @@ export class AuthService {
     return bcrypt.hash(password, 10);
   }
 
-  async signup(user: Readonly<NewUserInput>): Promise<UserDetails | any> {
-    const { Username, email, password, confirmPassword } = user;
+  async signup(
+    newUserInput: Readonly<NewUserInput>,
+  ): Promise<UserDetails | any> {
+    const { Username, email, password, confirmPassword } = newUserInput;
 
     if (!email.endsWith('@gmail.com')) {
       throw new HttpException(
@@ -42,12 +45,13 @@ export class AuthService {
       );
     }
     const hashedPassword = await this.hashPassword(password);
+    const hashedPassworded = await this.hashPassword(confirmPassword); //
     try {
       const newUser = await this.userService.create(
         Username,
         email,
         hashedPassword,
-        confirmPassword,
+        hashedPassworded, //
       );
       return this.userService._getUserDetails(newUser);
     } catch (error) {
@@ -86,9 +90,7 @@ export class AuthService {
     return this.userService._getUserDetails(user);
   }
 
-  async login(
-    existingUser: ExistingUserInput,
-  ): Promise<{ token: string } | null> {
+  async login(existingUser: ExistingUserInput): Promise<token | null> {
     const { email, password } = existingUser;
     const user = await this.validateUser(email, password);
 

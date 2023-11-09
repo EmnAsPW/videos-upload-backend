@@ -19,9 +19,11 @@ type Profile {
 }
 
 type UserDetails {
-  id: String!
-  name: String!
-  email: String!
+  _id: String!
+  username: String
+  email: String
+  password: String!
+  confirmPassword: String!
 }
 
 type token {

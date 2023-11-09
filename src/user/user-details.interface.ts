@@ -3,11 +3,17 @@ import { Field, ObjectType, InterfaceType } from '@nestjs/graphql';
 @ObjectType()
 export class UserDetails {
   @Field()
-  id: string;
+  _id: string;
 
-  @Field()
-  name: string;
+  @Field(() => String, { nullable: true })
+  username: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   email: string;
+
+  @Field()
+  password: string;
+
+  @Field()
+  confirmPassword: string;
 }
