@@ -26,6 +26,22 @@ export class User {
   @Field(() => String)
   @Prop({ required: true })
   confirmPassword: string;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  Address?: string;
+
+  @Field(() => Number, { nullable: true })
+  @Prop({ type: Number })
+  Age?: number;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  Bio?: string;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  image?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

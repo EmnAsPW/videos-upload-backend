@@ -10,10 +10,12 @@ type Video {
   video: String
 }
 
-type Profile {
+type User {
   _id: String
-  First_Name: String
-  Last_Name: String
+  username: String
+  email: String!
+  password: String!
+  confirmPassword: String!
   Address: String
   Age: Float
   Bio: String
@@ -34,6 +36,16 @@ type BooleanType {
   value: Boolean!
 }
 
+type Profile {
+  _id: String
+  First_Name: String
+  Last_Name: String
+  Address: String
+  Age: Float
+  Bio: String
+  image: String
+}
+
 type token {
   token: String!
 }
@@ -41,6 +53,7 @@ type token {
 type Query {
   videos: [Video!]!
   getvideobytitle(data: String!): [Video!]!
+  getUser(id: String!): UserDetails!
   profiles: [Profile!]!
   profilebyname(data: String!): [Profile!]!
 }
@@ -50,6 +63,8 @@ type Mutation {
   updateVideo(_id: String!, updateVideoDto: updateVideoDto!): Video!
   deleteVideo(_id: String!): Video!
   uplodaFile(file: Upload!): Boolean!
+  updateUser(_id: String!, updateUserInput: updateUserInput!): User!
+  deleteUser(_id: String!): User!
   createProfile(createProfile: CreateProfileInput!): Profile!
   updateProfile(_id: String!, updateprofileInput: UpdateProfileInput!): Profile!
   deleteProfile(_id: String!): Profile!
@@ -76,6 +91,17 @@ input updateVideoDto {
   video: Upload
 }
 
+input updateUserInput {
+  Username: Float
+  email: Float
+  password: Float
+  confirmPassword: Float
+  Address: String
+  Age: Float
+  Bio: String
+  image: Upload
+}
+
 input CreateProfileInput {
   First_Name: String
   Last_Name: String
@@ -99,6 +125,10 @@ input NewUserInput {
   email: String!
   password: String!
   confirmPassword: String!
+  Address: String
+  Age: Float
+  Bio: String
+  image: Upload
 }
 
 input ExistingUserInput {
