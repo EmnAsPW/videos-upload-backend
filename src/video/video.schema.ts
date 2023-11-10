@@ -25,5 +25,9 @@ export class Video {
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
   video: string;
+
+  @Field(() => String, { nullable: true })
+  @Prop({ type: String })
+  thumbnail: string;
 }
 export const VideoSchema = SchemaFactory.createForClass(Video);

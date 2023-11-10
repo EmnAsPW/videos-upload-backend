@@ -6,6 +6,7 @@ import { NewUserInput } from 'src/user/dto/New-user.input';
 import { ExistingUserInput } from 'src/user/dto/Existing-user.input';
 import { UserService } from 'src/user/user.service';
 import { token } from 'src/user/user-token.interface';
+import { jwttoken } from 'src/user/dto/token.input';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,16 @@ export class AuthService {
   async signup(
     newUserInput: Readonly<NewUserInput>,
   ): Promise<UserDetails | any> {
-    const { Username, email, password, confirmPassword } = newUserInput;
+    const {
+      Username,
+      email,
+      password,
+      confirmPassword,
+      // Address,
+      // Age,
+      // Bio,
+      // image,
+    } = newUserInput;
 
     if (!email.endsWith('@gmail.com')) {
       throw new HttpException(
@@ -52,6 +62,10 @@ export class AuthService {
         email,
         hashedPassword,
         hashedPassworded, //
+        // Address,
+        // Age,
+        // Bio,
+        // image,
       );
       return this.userService._getUserDetails(newUser);
     } catch (error) {
@@ -113,23 +127,42 @@ export class AuthService {
     }
   }
 
-  async verifyJwt(jwt: string): Promise<{ exp: number }> {
+  // async verifyJwt(jwt: string): Promise<{ exp: number }> {
+  //   try {
+  //     const { exp } = await this.jwtService.verifyAsync(jwt);
+  //     return { exp };
+  //   } catch (error) {
+  //     this.logger.error(`Invalid JWT: ${error.message}`);
+  //     throw new HttpException('Invalid JWT', HttpStatus.UNAUTHORIZED);
+  //   }
+  // }
+  async verifyJwt(token: string): Promise<UserDetails | null> {
     try {
-      const { exp } = await this.jwtService.verifyAsync(jwt);
-      return { exp };
+      const payload = this.jwtService.verify(token);
+
+      const userDetails = this.getUserDetailsFromPayload(payload);
+
+      return userDetails;
     } catch (error) {
-      this.logger.error(`Invalid JWT: ${error.message}`);
-      throw new HttpException('Invalid JWT', HttpStatus.UNAUTHORIZED);
+      throw new Error('JWT verification failed: ' + error.message);
     }
+  }
+
+  public getUserDetailsFromPayload(payload: any): UserDetails {
+    //const { _id, username, email } = payload.user;
+    const userDetails: UserDetails = {
+      _id: payload.user._id,
+      username: payload.user.username,
+      email: payload.user.email,
+    };
+    return userDetails;
   }
 
   async signout(jwt: string): Promise<boolean> {
     try {
       this.jwtService.verify(jwt);
       //const payload = this.jwtService.verify(jwt);
-
       //const invalidToken = this.jwtService.sign({ exp: 0 });
-
       return true;
     } catch (error) {
       this.logger.error(`Error during signout: ${error.message}`);

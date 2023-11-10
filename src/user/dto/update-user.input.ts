@@ -1,24 +1,25 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
+
 @InputType()
-export class NewUserInput {
-  @Field()
+export class updateUserInput {
+  @Field(() => String, { nullable: true })
   Username: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   email: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   password: string;
 
-  @Field()
+  @Field(() => String, { nullable: true })
   confirmPassword: string;
 
   @Field(() => String, { nullable: true })
   Address: string;
 
   @Field(() => Number, { nullable: true })
-  Age: Number;
+  Age: number;
 
   @Field(() => String, { nullable: true })
   Bio: string;

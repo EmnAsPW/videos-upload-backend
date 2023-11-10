@@ -8,6 +8,29 @@ type Video {
   description: String
   tags: [String!]
   video: String
+  thumbnail: String
+}
+
+type User {
+  _id: String
+  username: String
+  email: String!
+  password: String!
+  confirmPassword: String!
+  Address: String
+  Age: String
+  Bio: String
+  image: String
+}
+
+type UserDetails {
+  _id: String!
+  username: String
+  email: String
+}
+
+type BooleanType {
+  value: Boolean!
 }
 
 type Profile {
@@ -20,20 +43,6 @@ type Profile {
   image: String
 }
 
-type UserDetails {
-  _id: String!
-  username: String
-  email: String
-}
-
-type ExpireIn {
-  exp: Float!
-}
-
-type BooleanType {
-  value: Boolean!
-}
-
 type token {
   token: String!
 }
@@ -41,6 +50,7 @@ type token {
 type Query {
   videos: [Video!]!
   getvideobytitle(data: String!): [Video!]!
+  getUser(id: String!): UserDetails!
   profiles: [Profile!]!
   profilebyname(data: String!): [Profile!]!
 }
@@ -50,12 +60,14 @@ type Mutation {
   updateVideo(_id: String!, updateVideoDto: updateVideoDto!): Video!
   deleteVideo(_id: String!): Video!
   uplodaFile(file: Upload!): Boolean!
+  updateUser(_id: String!, updateUserInput: updateUserInput!): User!
+  deleteUser(_id: String!): User!
   createProfile(createProfile: CreateProfileInput!): Profile!
   updateProfile(_id: String!, updateprofileInput: UpdateProfileInput!): Profile!
   deleteProfile(_id: String!): Profile!
   signup(newUserInput: NewUserInput!): UserDetails!
   login(existingUserInput: ExistingUserInput!): token!
-  verifyJwt(jwt: String!): ExpireIn!
+  verifyJwt(jwt: jwttoken!): UserDetails!
   signout(jwt: String!): BooleanType!
 }
 
@@ -74,6 +86,17 @@ input updateVideoDto {
   description: String
   tags: [String!]
   video: Upload
+}
+
+input updateUserInput {
+  Username: String
+  email: String
+  password: String
+  confirmPassword: String
+  Address: String
+  Age: Float
+  Bio: String
+  image: Upload
 }
 
 input CreateProfileInput {
@@ -99,9 +122,17 @@ input NewUserInput {
   email: String!
   password: String!
   confirmPassword: String!
+  Address: String
+  Age: Float
+  Bio: String
+  image: Upload
 }
 
 input ExistingUserInput {
   email: String!
   password: String!
+}
+
+input jwttoken {
+  token: String!
 }

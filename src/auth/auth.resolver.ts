@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import {
@@ -11,10 +12,16 @@ import {
 import { NewUserInput } from 'src/user/dto/New-user.input';
 import { ExistingUserInput } from 'src/user/dto/Existing-user.input';
 import { token } from 'src/user/user-token.interface';
+import { jwttoken } from 'src/user/dto/token.input';
+import { log } from 'console';
+//import { jwtConstants } from './constants';
 
 @Resolver('Auth')
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
 
   @Mutation(() => UserDetails, { name: 'signup' })
   async signup(
@@ -38,10 +45,29 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => ExpireIn, { name: 'verifyJwt' })
-  async verifyJwt(@Args('jwt') jwt: string): Promise<{ exp: number }> {
+  // @Mutation(() => ExpireIn, { name: 'verifyJwt' })
+  // async verifyJwt(@Args('jwt') jwt: string): Promise<{ exp: number }> {
+  //   try {
+  //     return this.authService.verifyJwt(jwt);
+  //   } catch (error) {
+  //     throw new Error('JWT verification failed: ' + error.message);
+  //   }
+  // }
+
+  @Mutation(() => UserDetails, { name: 'verifyJwt' })
+  async verifyJwt(@Args('jwt') jwt: jwttoken): Promise<UserDetails | null> {
     try {
-      return this.authService.verifyJwt(jwt);
+      const { token } = jwt;
+      // const payload = await this.jwtService.verifyAsync(token, {
+      //   secret: jwtConstants.secret, //jwtConstants
+      // });
+      const userDetails = await this.authService.verifyJwt(token);
+      console.log('..........', userDetails);
+      if (userDetails) {
+        return userDetails;
+      } else {
+        return null;
+      }
     } catch (error) {
       throw new Error('JWT verification failed: ' + error.message);
     }
