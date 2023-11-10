@@ -8,7 +8,6 @@ type Video {
   description: String
   tags: [String!]
   video: String
-  thumbnail: String
 }
 
 type User {

@@ -18,11 +18,11 @@ export class UserDetails {
   // confirmPassword: string;
 }
 
-@ObjectType()
-export class ExpireIn {
-  @Field()
-  exp: number;
-}
+// @ObjectType()
+// export class ExpireIn {
+//   @Field()
+//   exp: number;
+// }
 
 @ObjectType()
 export class BooleanType {

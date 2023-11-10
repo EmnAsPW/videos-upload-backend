@@ -5,11 +5,7 @@ import { UserDetails } from './user-details.interface';
 import { updateUserInput } from './dto/update-user.input';
 import { join } from 'path';
 import { createWriteStream } from 'fs';
-// import { NewUserInput } from './dto/New-user.input';
-// import { ExistingUserInput } from './dto/Existing-user.input';
-//import { join } from 'path';
-//import { createWriteStream } from 'fs';
-//import { updateUserInput } from './dto/update-user.input';
+import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Resolver(() => User)
@@ -17,10 +13,12 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => UserDetails)
+  @UseGuards(JwtGuard)
   async getUser(@Args('id') id: string): Promise<UserDetails | null> {
     return this.userService.findById(id);
   }
   @Mutation(() => User, { name: 'updateUser' })
+  //@UseGuards(JwtGuard)
   async updateUser(
     @Args('_id') _id: string,
     @Args('updateUserInput') updateUserInput: updateUserInput,
@@ -81,6 +79,7 @@ export class UserResolver {
   }
 
   @Mutation(() => User, { name: 'deleteUser' })
+  //@UseGuards(JwtGuard)
   async deleteUser(@Args('_id') _id: string): Promise<User> {
     return await this.userService.deleteUser(_id);
   }

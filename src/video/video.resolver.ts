@@ -1,5 +1,5 @@
 import { FileUpload } from 'graphql-upload';
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Context } from '@nestjs/graphql';
 import { createWriteStream } from 'fs';
 import { GraphQLUpload } from 'graphql-upload';
 import { VideoService } from './video.service';
@@ -26,6 +26,12 @@ export class VideoResolver {
 
   @Mutation(() => Video)
   async createVideo(@Args('createVideoDto') createVideoDto: CreateVideoDto) {
+    //   @Context() context,
+    // ) {
+    //    const userId = context.user.id; // Adjust this according to your actual context structure
+
+    //   // Include userId in createVideoDto
+    //   createVideoDto.userId = userId;
     return await this.videoService.createVideo(createVideoDto);
   }
 

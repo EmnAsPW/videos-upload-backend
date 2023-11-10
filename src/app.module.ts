@@ -30,6 +30,27 @@ import { AuthModule } from './auth/auth.module';
       ///sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
+    // GraphQLModule.forRoot<any>({
+    //   csrfPrevention: true,
+    //   driver: ApolloDriver,
+    //   playground: false,
+    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    //   ///sortSchema: true,
+    //   plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    //   'subscriptions-transport-ws': {
+    //     onConnect: (headersRaw: Record<string, unknown>) => {
+    //       const headers = Object.keys(headersRaw).reduce((dest, key) => {
+    //         dest[key.toLowerCase()] = headersRaw[key];
+    //         return dest;
+    //       }, {});
+    //       return {
+    //         req: {
+    //           headers: headers,
+    //         },
+    //       };
+    //     },
+    //   },
+    // }),
     VideoModule,
     UserModule,
     ProfileModule,
