@@ -7,6 +7,7 @@ import { updateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UserService {
+  // updateuser: any;
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}

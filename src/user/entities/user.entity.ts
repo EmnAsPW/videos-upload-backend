@@ -33,7 +33,7 @@ export class User {
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
-  Age: string;
+  Age: number;
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
