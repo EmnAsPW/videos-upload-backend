@@ -13,7 +13,7 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => UserDetails)
-  @UseGuards(JwtGuard)
+  //@UseGuards(JwtGuard)
   async getUser(@Args('id') id: string): Promise<UserDetails | null> {
     return this.userService.findById(id);
   }
@@ -82,5 +82,19 @@ export class UserResolver {
   //@UseGuards(JwtGuard)
   async deleteUser(@Args('_id') _id: string): Promise<User> {
     return await this.userService.deleteUser(_id);
+  }
+
+  @Mutation(() => String, { name: 'deleteOneField' })
+  async deleteOneField(
+    @Args('userId', { type: () => String }) _id: string,
+    @Args('fieldToDelete') fieldToDelete: string,
+  ) {
+    try {
+      const result = await this.userService.deleteOneField(_id, fieldToDelete);
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Failed to delete field');
+    }
   }
 }

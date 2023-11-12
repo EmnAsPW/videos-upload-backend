@@ -25,15 +25,28 @@ export class VideoResolver {
   }
 
   @Mutation(() => Video)
-  async createVideo(@Args('createVideoDto') createVideoDto: CreateVideoDto) {
-    //   @Context() context,
-    // ) {
-    //    const userId = context.user.id; // Adjust this according to your actual context structure
+  async createVideo(@Args('createVideoDto') createVideoDto: CreateVideoDto  ): Promise<Video> {
+    // @Context() context,
+    // ): Promise<Video> {
+    //   try {
 
-    //   // Include userId in createVideoDto
-    //   createVideoDto.userId = userId;
-    return await this.videoService.createVideo(createVideoDto);
+    //     if (!context.req.user || !context.req.user._id) {
+    //       throw new Error('User information not available in context');
+    //     }
+    
+    //     // Access userId from the correct location in the context
+    //     const userId = context.req.user._id;
+    
+    //     // Include userId in createVideoDto
+    //     createVideoDto.userId = userId;
+    
+        return await this.videoService.createVideo(createVideoDto);
+      // } catch (error) {
+      //   console.error('Error in createVideo resolver:', error);
+      //   throw new Error('Failed to create video');
+      // }
   }
+
 
   @Mutation(() => Video, { name: 'updateVideo' })
   async updateVideo(

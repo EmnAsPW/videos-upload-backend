@@ -8,7 +8,7 @@ import { VideoModule } from 'src/video/video.module';
 
 @Module({
   imports: [
-    VideoModule,
+    //VideoModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [UserService, UserResolver],

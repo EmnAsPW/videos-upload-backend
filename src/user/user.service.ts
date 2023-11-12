@@ -4,6 +4,7 @@ import { Model, UpdateQuery } from 'mongoose';
 import { UserDetails } from './user-details.interface';
 import { User, UserDocument } from './entities/user.entity';
 import { updateUserInput } from './dto/update-user.input';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
@@ -66,5 +67,31 @@ export class UserService {
 
   async deleteUser(_id: string): Promise<User> {
     return await this.userModel.findByIdAndDelete(_id);
+  }
+
+  async deleteOneField(
+    _id: string,
+    fieldToDelete: string,
+  ) {
+    try {
+      const user = await this.userModel.findById(_id).exec();
+
+      if (!user) {
+        return 'User Not Found';
+      }
+
+      if (user[fieldToDelete] !== undefined) {
+        const updateQuery = { $unset: { [fieldToDelete]: 1 } };
+
+        await this.userModel
+          .findByIdAndUpdate(_id, updateQuery, { new: true })
+          .exec();
+        return `Successfully deleted ${fieldToDelete} from user`;
+      } else {
+        return `${fieldToDelete} not found in user`;
+      }
+    } catch (error) {
+      throw new NotFoundException('User Not Found');
+    }
   }
 }

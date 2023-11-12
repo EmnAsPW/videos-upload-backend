@@ -20,4 +20,7 @@ export class CreateVideoDto {
   // @Field(() => ID)
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   // _id: string;
+
+  // @Field(() => ID)
+  // userId: string;
 }

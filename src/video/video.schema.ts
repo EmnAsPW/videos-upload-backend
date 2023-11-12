@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
 export type VideoDocument = Video & Document;
@@ -9,6 +9,9 @@ export type VideoDocument = Video & Document;
 export class Video {
   @Field(() => String, { nullable: true })
   _id?: string;
+
+  // @Field(() => ID)
+  // _id: Types.ObjectId;
 
   @Field(() => String, { nullable: true })
   @Prop({ type: String })
@@ -26,8 +29,8 @@ export class Video {
   @Prop({ type: String })
   video: string;
 
-  // @Field(() => String, { nullable: true })
-  // @Prop({ type: String })
-  // thumbnail: string;
+  // @Field(() => ID)
+  // @Prop({ type: Types.ObjectId, ref: 'User' })
+  // userId: Types.ObjectId;
 }
 export const VideoSchema = SchemaFactory.createForClass(Video);
