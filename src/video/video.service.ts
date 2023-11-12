@@ -7,6 +7,7 @@ import { Video, VideoDocument } from './video.schema';
 import { CreateVideoDto } from './dto/create-video.input';
 //import { FileUpload } from 'graphql-upload';
 import { updateVideoDto } from './dto/update-video.input';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class VideoService {
@@ -53,14 +54,75 @@ export class VideoService {
       .sort({ score: { $meta: 'textScore' } });
   }
 
+  // async updateVideo(
+  //   _id: string,
+  //   data: UpdateQuery<VideoDocument> | updateVideoDto,
+  // ): Promise<Video> {
+  //   return await this.videoModel.findByIdAndUpdate(_id, data, { new: true });
+  // }
+
   async updateVideo(
     _id: string,
-    data: UpdateQuery<VideoDocument> | updateVideoDto,
+    data: UpdateQuery<updateVideoDto>
   ): Promise<Video> {
     return await this.videoModel.findByIdAndUpdate(_id, data, { new: true });
   }
 
   async deleteVideo(_id: string): Promise<Video> {
     return await this.videoModel.findByIdAndDelete(_id);
+  }
+
+  async deleteOneVideoInfo(
+    _id: string,
+    fieldToDelete: string,
+  ) {
+    try {
+      const video = await this.videoModel.findById(_id).exec();
+
+      if (!video) {
+        return 'Video Not Found';
+      }
+
+      if (video[fieldToDelete] !== undefined) {
+        const updateQuery = { $unset: { [fieldToDelete]: 1 } };
+
+        await this.videoModel
+          .findByIdAndUpdate(_id, updateQuery, { new: true })
+          .exec();
+        return `Successfully deleted ${fieldToDelete} from Video`;
+      } else {
+        return `${fieldToDelete} not found in Video`;
+      }
+    } catch (error) {
+      throw new NotFoundException('Video Not Found');
+    }
+  }
+
+  async updateOneVideoInfo(
+    _id: string,
+    fieldToUpdate: string,
+    newValue: string,
+  ) {
+    try {
+      const video = await this.videoModel.findById(_id).exec();
+  
+      if (!video) {
+        return 'Video Not Found';
+      }
+  
+      if (video[fieldToUpdate] !== undefined) {
+        const updateQuery = { [fieldToUpdate]: newValue };
+  
+        const updatedVideo = await this.videoModel
+          .findByIdAndUpdate(_id, updateQuery, { new: true })
+          .exec();
+  
+        return `Successfully updated ${fieldToUpdate} in Video. New value: ${updatedVideo[fieldToUpdate]}`;
+      } else {
+        return `${fieldToUpdate} not found in Video`;
+      }
+    } catch (error) {
+      throw new NotFoundException('Video Not Found');
+    }
   }
 }

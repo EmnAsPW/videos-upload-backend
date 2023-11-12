@@ -47,7 +47,7 @@ type token {
 }
 
 type Query {
-  videos: [Video!]!
+  getAllvideos: [Video!]!
   getvideobytitle(data: String!): [Video!]!
   getUser(id: String!): UserDetails!
   profiles: [Profile!]!
@@ -58,10 +58,12 @@ type Mutation {
   createVideo(createVideoDto: CreateVideoDto!): Video!
   updateVideo(_id: String!, updateVideoDto: updateVideoDto!): Video!
   deleteVideo(_id: String!): Video!
-  uplodaFile(file: Upload!): Boolean!
+  deleteOneVideoInfo(userId: String!, fieldToDelete: String!): String!
+  updateOneVideoInfo(userId: String!, fieldToUpdate: String!, newValue: String!): String!
   updateUser(_id: String!, updateUserInput: updateUserInput!): User!
   deleteUser(_id: String!): User!
-  deleteOneField(userId: String!, fieldToDelete: String!): String!
+  deleteOneUserInfo(userId: String!, fieldToDelete: String!): String!
+  updateOneUserInfo(userId: String!, fieldToUpdate: String!, newValue: String!): String!
   createProfile(createProfile: CreateProfileInput!): Profile!
   updateProfile(_id: String!, updateprofileInput: UpdateProfileInput!): Profile!
   deleteProfile(_id: String!): Profile!
@@ -78,15 +80,10 @@ input CreateVideoDto {
   video: Upload
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input updateVideoDto {
-  title: String
-  description: String
-  tags: [String!]
   video: Upload
 }
 

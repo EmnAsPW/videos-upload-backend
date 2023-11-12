@@ -84,17 +84,35 @@ export class UserResolver {
     return await this.userService.deleteUser(_id);
   }
 
-  @Mutation(() => String, { name: 'deleteOneField' })
+  @Mutation(() => String, { name: 'deleteOneUserInfo' })
+  //@UseGuards(JwtGuard)
   async deleteOneField(
     @Args('userId', { type: () => String }) _id: string,
     @Args('fieldToDelete') fieldToDelete: string,
   ) {
     try {
-      const result = await this.userService.deleteOneField(_id, fieldToDelete);
+      const result = await this.userService.deleteOneUserInfo(_id, fieldToDelete);
       return result;
     } catch (error) {
       console.log(error);
       throw new Error('Failed to delete field');
     }
   }
+
+  
+  @Mutation(() => String, { name: 'updateOneUserInfo' })
+  //@UseGuards(JwtGuard)
+  async updateOneField(
+  @Args('userId', { type: () => String }) _id: string,
+  @Args('fieldToUpdate') fieldToUpdate: string,
+  @Args('newValue') newValue: string,
+) {
+  try {
+    const result = await this.userService.updateOneUserInfo(_id, fieldToUpdate, newValue);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Failed to update field');
+  }
+}
 }

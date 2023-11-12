@@ -69,7 +69,7 @@ export class UserService {
     return await this.userModel.findByIdAndDelete(_id);
   }
 
-  async deleteOneField(
+  async deleteOneUserInfo(
     _id: string,
     fieldToDelete: string,
   ) {
@@ -89,6 +89,34 @@ export class UserService {
         return `Successfully deleted ${fieldToDelete} from user`;
       } else {
         return `${fieldToDelete} not found in user`;
+      }
+    } catch (error) {
+      throw new NotFoundException('User Not Found');
+    }
+  }
+
+  async updateOneUserInfo(
+    _id: string,
+    fieldToUpdate: string,
+    newValue: string,
+  ) {
+    try {
+      const video = await this.userModel.findById(_id).exec();
+  
+      if (!video) {
+        return 'User Not Found';
+      }
+  
+      if (video[fieldToUpdate] !== undefined) {
+        const updateQuery = { [fieldToUpdate]: newValue };
+  
+        const updatedUser = await this.userModel
+          .findByIdAndUpdate(_id, updateQuery, { new: true })
+          .exec();
+  
+        return `Successfully updated ${fieldToUpdate} in User. New value: ${updatedUser[fieldToUpdate]}`;
+      } else {
+        return `${fieldToUpdate} not found in User`;
       }
     } catch (error) {
       throw new NotFoundException('User Not Found');
