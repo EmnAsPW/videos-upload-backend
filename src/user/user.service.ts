@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { Model, Types, UpdateQuery } from 'mongoose';
 import { UserDetails } from './user-details.interface';
 import { User, UserDocument } from './entities/user.entity';
 import { updateUserInput } from './dto/update-user.input';
 import { NotFoundException } from '@nestjs/common';
+import {} from './entities/Uservideo.entity';
+//import { Types } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -21,6 +23,28 @@ export class UserService {
       // password: user.password,
       // confirmPassword: user.confirmPassword,
     };
+  }
+
+  async findByIdWithVideos(id: string) {
+    const userWithVideos = await this.userModel.aggregate([
+      {
+        $match: { _id: new Types.ObjectId(id) },
+      },
+      {
+        $lookup: {
+          from: 'videos',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'videos',
+        },
+      },
+    ]);
+    console.log('............', userWithVideos);
+    return userWithVideos[0];
+    // if (userWithVideos.length === 0) {
+    //   return null;
+    // }
+    // return this.userModel.findById(userWithVideos[0]);
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {
@@ -60,7 +84,7 @@ export class UserService {
 
   async updateuser(
     _id: string,
-    data: UpdateQuery<UserDocument> | updateUserInput,
+    data: UpdateQuery  <UserDocument> | updateUserInput,
   ): Promise<User> {
     return await this.userModel.findByIdAndUpdate(_id, data, { new: true });
   }
@@ -69,10 +93,7 @@ export class UserService {
     return await this.userModel.findByIdAndDelete(_id);
   }
 
-  async deleteOneUserInfo(
-    _id: string,
-    fieldToDelete: string,
-  ) {
+  async deleteOneUserInfo(_id: string, fieldToDelete: string) {
     try {
       const user = await this.userModel.findById(_id).exec();
 
@@ -102,18 +123,18 @@ export class UserService {
   ) {
     try {
       const video = await this.userModel.findById(_id).exec();
-  
+
       if (!video) {
         return 'User Not Found';
       }
-  
+
       if (video[fieldToUpdate] !== undefined) {
         const updateQuery = { [fieldToUpdate]: newValue };
-  
+
         const updatedUser = await this.userModel
           .findByIdAndUpdate(_id, updateQuery, { new: true })
           .exec();
-  
+
         return `Successfully updated ${fieldToUpdate} in User. New value: ${updatedUser[fieldToUpdate]}`;
       } else {
         return `${fieldToUpdate} not found in User`;

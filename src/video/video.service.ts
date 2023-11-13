@@ -3,11 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { createWriteStream } from 'fs';
 import { Model, UpdateQuery } from 'mongoose';
 import { join, normalize } from 'path';
-import { Video, VideoDocument } from './video.schema';
+//import { Video, VideoDocument } from './video.schema';
 import { CreateVideoDto } from './dto/create-video.input';
 //import { FileUpload } from 'graphql-upload';
 import { updateVideoDto } from './dto/update-video.input';
 import { NotFoundException } from '@nestjs/common';
+import { Video, VideoDocument } from './entities/video.entity';
 
 @Injectable()
 export class VideoService {
@@ -16,7 +17,7 @@ export class VideoService {
   ) {}
 
   async createVideo(createVideoDto: CreateVideoDto): Promise<Video> {
-    const { title, description, tags, video } = createVideoDto;
+    const { title, description, tags, video, userId } = createVideoDto;
     //console.log(image);
     const resp = await video;
     const { filename, mimetype, encoding, createReadStream } = resp;
@@ -41,6 +42,7 @@ export class VideoService {
       description,
       tags,
       video: savePath,
+      userId,
     });
   }
 
@@ -63,7 +65,7 @@ export class VideoService {
 
   async updateVideo(
     _id: string,
-    data: UpdateQuery<updateVideoDto>
+    data: UpdateQuery<updateVideoDto>,
   ): Promise<Video> {
     return await this.videoModel.findByIdAndUpdate(_id, data, { new: true });
   }
@@ -72,10 +74,7 @@ export class VideoService {
     return await this.videoModel.findByIdAndDelete(_id);
   }
 
-  async deleteOneVideoInfo(
-    _id: string,
-    fieldToDelete: string,
-  ) {
+  async deleteOneVideoInfo(_id: string, fieldToDelete: string) {
     try {
       const video = await this.videoModel.findById(_id).exec();
 
@@ -105,18 +104,18 @@ export class VideoService {
   ) {
     try {
       const video = await this.videoModel.findById(_id).exec();
-  
+
       if (!video) {
         return 'Video Not Found';
       }
-  
+
       if (video[fieldToUpdate] !== undefined) {
         const updateQuery = { [fieldToUpdate]: newValue };
-  
+
         const updatedVideo = await this.videoModel
           .findByIdAndUpdate(_id, updateQuery, { new: true })
           .exec();
-  
+
         return `Successfully updated ${fieldToUpdate} in Video. New value: ${updatedVideo[fieldToUpdate]}`;
       } else {
         return `${fieldToUpdate} not found in Video`;

@@ -25,6 +25,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => token, { name: 'login' })
+  //@UseGuards(JwtGuard)
   async login(
     @Args('existingUserInput') existingUserInput: ExistingUserInput,
   ): Promise<token | null> {
@@ -45,7 +46,7 @@ export class AuthResolver {
   // }
 
   @Mutation(() => UserDetails, { name: 'verifyJwt' })
-  // @UseGuards(JwtGuard)
+  //@UseGuards(JwtGuard)
   async verifyJwt(@Args('jwt') jwt: jwttoken): Promise<UserDetails | null> {
     try {
       const { token } = jwt;
@@ -53,7 +54,7 @@ export class AuthResolver {
       //   secret: jwtConstants.secret, //jwtConstants
       // });
       const userDetails = await this.authService.verifyJwt(token);
-      console.log('..........', userDetails);
+      //console.log('..........', userDetails);
       if (userDetails) {
         return userDetails;
       } else {

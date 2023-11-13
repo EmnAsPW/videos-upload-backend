@@ -8,10 +8,11 @@ type Video {
   description: String
   tags: [String!]
   video: String
+  userId: String
 }
 
 type User {
-  _id: String
+  _id: ID!
   username: String
   email: String!
   password: String!
@@ -32,6 +33,19 @@ type BooleanType {
   value: Boolean!
 }
 
+type UserVideo {
+  _id: ID!
+  username: String
+  email: String!
+  password: String!
+  confirmPassword: String!
+  Address: String
+  Age: String
+  Bio: String
+  image: String
+  videos: [Video!]
+}
+
 type Profile {
   _id: String
   First_Name: String
@@ -50,6 +64,7 @@ type Query {
   getAllvideos: [Video!]!
   getvideobytitle(data: String!): [Video!]!
   getUser(id: String!): UserDetails!
+  getUserwithvideo(id: String!): UserVideo!
   profiles: [Profile!]!
   profilebyname(data: String!): [Profile!]!
 }
@@ -78,6 +93,7 @@ input CreateVideoDto {
   description: String
   tags: [String!]
   video: Upload
+  userId: ID!
 }
 
 """The `Upload` scalar type represents a file upload."""

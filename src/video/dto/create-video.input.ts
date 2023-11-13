@@ -17,10 +17,7 @@ export class CreateVideoDto {
   @Field(() => GraphQLUpload, { nullable: true })
   video?: FileUpload | string;
 
-  // @Field(() => ID)
-  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  // _id: string;
-
-  // @Field(() => ID)
-  // userId: string;
+  @Field(() => ID)
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  userId: Types.ObjectId;
 }

@@ -1,14 +1,15 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Video } from 'src/video/entities/video.entity';
 
 export type UserDocument = User & Document;
 
 @ObjectType()
 @Schema()
 export class User {
-  @Field(() => String, { nullable: true })
-  //@Prop(() => String)
+  @Field(() => ID)
+  // @Prop(() => String)  //No need Always
   _id?: string;
 
   @Field(() => String, { nullable: true })
