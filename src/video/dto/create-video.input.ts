@@ -18,6 +18,6 @@ export class CreateVideoDto {
   video?: FileUpload | string;
 
   @Field(() => ID)
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  userId: Types.ObjectId;
+  //@Prop({ type: Types.ObjectId, ref: 'User' })
+  userId: string;
 }

@@ -18,6 +18,7 @@ export class UserResolver {
   async getUser(@Args('id') id: string): Promise<UserDetails | null> {
     return this.userService.findById(id);
   }
+
   @Query(() => UserVideo, { name: 'getUserwithvideo' })
   async getUserwithvideo(@Args('id') id: string) {
     return this.userService.findByIdWithVideos(id);

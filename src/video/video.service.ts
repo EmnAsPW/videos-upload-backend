@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { createWriteStream } from 'fs';
-import { Model, UpdateQuery } from 'mongoose';
+import { Model, Types, UpdateQuery } from 'mongoose';
 import { join, normalize } from 'path';
 //import { Video, VideoDocument } from './video.schema';
 import { CreateVideoDto } from './dto/create-video.input';
@@ -37,12 +37,13 @@ export class VideoService {
     const baseUrl = process.env.BASE_URL;
     const port = process.env.PORT;
     savePath = `${baseUrl}${port}\\${newFilename}`;
+    const userIdAsObjectId = new Types.ObjectId(userId);
     return await this.videoModel.create({
       title,
       description,
       tags,
       video: savePath,
-      userId,
+      userId: userIdAsObjectId,
     });
   }
 

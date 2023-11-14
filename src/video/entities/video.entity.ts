@@ -29,8 +29,8 @@ export class Video {
   @Prop({ type: String })
   video: string;
 
-  @Field(() => String, { nullable: true })
-  @Prop({ type: String })
+  @Field(() => ID)
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
   userId: mongoose.Types.ObjectId;
 }
 export const VideoSchema = SchemaFactory.createForClass(Video);

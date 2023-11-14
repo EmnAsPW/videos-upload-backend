@@ -5,7 +5,7 @@ import { UserDetails } from './user-details.interface';
 import { User, UserDocument } from './entities/user.entity';
 import { updateUserInput } from './dto/update-user.input';
 import { NotFoundException } from '@nestjs/common';
-import {} from './entities/Uservideo.entity';
+import { UserVideo } from './entities/Uservideo.entity';
 //import { Types } from 'mongoose';
 
 @Injectable()
@@ -84,7 +84,7 @@ export class UserService {
 
   async updateuser(
     _id: string,
-    data: UpdateQuery  <UserDocument> | updateUserInput,
+    data: UpdateQuery<UserDocument> | updateUserInput,
   ): Promise<User> {
     return await this.userModel.findByIdAndUpdate(_id, data, { new: true });
   }

@@ -8,7 +8,7 @@ type Video {
   description: String
   tags: [String!]
   video: String
-  userId: String
+  userId: ID!
 }
 
 type User {
@@ -40,7 +40,7 @@ type UserVideo {
   password: String!
   confirmPassword: String!
   Address: String
-  Age: String
+  Age: Float
   Bio: String
   image: String
   videos: [Video!]
